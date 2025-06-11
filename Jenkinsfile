@@ -1,20 +1,35 @@
 pipeline {
     agent any
+
     stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone the repository containing the project
+                git 'https://github.com/JamesTuen-NCS/FirstRepo'
+            }
+        }
+
         stage('Build') {
             steps {
-                echo 'Building...'
+                // Run Maven clean and package
+                sh 'mvn clean package'
             }
         }
-        stage('Test') {
+
+        stage('Teardown') {
             steps {
-                echo 'Testing...'
+                // Run Maven teardown
+                sh 'mvn teardown'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-            }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
